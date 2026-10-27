@@ -1,24 +1,26 @@
-import { BrowserWindow, IpcMainInvokeEvent } from 'electron'
+import { BrowserWindow, dialog, IpcMainInvokeEvent } from 'electron'
+
+import { WindowAction } from '../types/WindowAction'
 
 export function handleWindowAction(event: IpcMainInvokeEvent, action: string) {
   const win = BrowserWindow.fromWebContents(event.sender)
 
   if (!win) {
-    console.error('No window found for the given web contents.')
+    dialog.showErrorBox('Window Error', 'No window found for the action.')
     return
   }
 
-  if (action === 'minimize') {
+  if (action === WindowAction.MINIMIZE) {
     win.minimize()
     return
   }
 
-  if (action === 'maximize') {
+  if (action === WindowAction.MAXIMIZE) {
     win.isMaximized() ? win.unmaximize() : win.maximize()
     return
   }
 
-  if (action === 'close') {
+  if (action === WindowAction.CLOSE) {
     win.close()
     return
   }

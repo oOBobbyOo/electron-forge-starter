@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import started from 'electron-squirrel-startup'
 import path from 'node:path'
 
+import { WINDOW_ACTION } from './types/WindowAction'
 import { handleWindowAction } from './utils/window'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -38,7 +39,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow()
 
-  ipcMain.on('window:action', handleWindowAction)
+  ipcMain.on(WINDOW_ACTION, handleWindowAction)
 
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
