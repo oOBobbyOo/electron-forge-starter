@@ -2,7 +2,7 @@ import { BrowserWindow, dialog, IpcMainInvokeEvent } from 'electron'
 
 import { WindowAction } from '../types/WindowAction'
 
-export function handleWindowAction(event: IpcMainInvokeEvent, action: string) {
+export function handleWindowAction(event: IpcMainInvokeEvent, action: WindowAction) {
   const win = BrowserWindow.fromWebContents(event.sender)
 
   if (!win) {
