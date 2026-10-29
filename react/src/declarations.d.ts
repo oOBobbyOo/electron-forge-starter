@@ -1,5 +1,5 @@
 /// <reference types="@electron-forge/plugin-vite/forge-vite-env" />
-declare module '*.css';
+/// <reference types="vite/client" />
 
 import { WindowAction } from './types/WindowAction'
 
