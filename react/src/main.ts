@@ -29,8 +29,10 @@ const createWindow = () => {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
   }
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // 仅在开发环境打开 DevTools，打包后的正式版本不打开
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools()
+  }
 }
 
 // This method will be called when Electron has finished
