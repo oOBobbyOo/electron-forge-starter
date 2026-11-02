@@ -41,20 +41,11 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow()
 
-  // 创建应用菜单
+  // 获取应用菜单
+  const appWindow = Menu.getApplicationMenu()?.items ?? []
+
+  // 在应用菜单中添加帮助菜单
   const menuTemplate: MenuItemConstructorOptions[] = [
-    {
-      role: 'fileMenu',
-    },
-    {
-      role: 'editMenu',
-    },
-    {
-      role: 'viewMenu',
-    },
-    {
-      role: 'windowMenu',
-    },
     {
       role: 'help',
       submenu: [
@@ -69,7 +60,7 @@ app.whenReady().then(() => {
     },
   ]
 
-  const menu = Menu.buildFromTemplate(menuTemplate)
+  const menu = Menu.buildFromTemplate([...appWindow, ...menuTemplate])
   Menu.setApplicationMenu(menu)
 
   // 监听窗口操作事件
