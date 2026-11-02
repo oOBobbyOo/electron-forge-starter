@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu, MenuItemConstructorOptions } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, MenuItem, MenuItemConstructorOptions } from 'electron'
 import started from 'electron-squirrel-startup'
 import path from 'node:path'
 
@@ -41,8 +41,26 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow()
 
-  // 获取应用菜单
-  const appWindow = Menu.getApplicationMenu()?.items ?? []
+  // 创建 "Always on Top" 菜单项
+  const alwaysOnTopMenuItem: MenuItemConstructorOptions = {
+    label: 'Always on Top',
+    type: 'checkbox',
+    click: (menuItem, window) => {
+      window?.setAlwaysOnTop(menuItem.checked)
+    },
+  }
+
+  // 获取应用菜单, 并在窗口菜单中添加 "Always on Top" 选项
+  const appWindow =
+    Menu.getApplicationMenu()?.items.map((item: MenuItem) => {
+      if (item.role?.toLocaleLowerCase() === 'windowmenu') {
+        return new MenuItem({
+          role: 'windowMenu',
+          submenu: Menu.buildFromTemplate([alwaysOnTopMenuItem, ...(item.submenu?.items ?? [])]),
+        })
+      }
+      return item
+    }) ?? []
 
   // 在应用菜单中添加帮助菜单
   const menuTemplate: MenuItemConstructorOptions[] = [
