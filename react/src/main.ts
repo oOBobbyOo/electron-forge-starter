@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, MenuItemConstructorOptions } from 'electron'
 import started from 'electron-squirrel-startup'
 import path from 'node:path'
 
@@ -41,6 +41,38 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow()
 
+  // 创建应用菜单
+  const menuTemplate: MenuItemConstructorOptions[] = [
+    {
+      role: 'fileMenu',
+    },
+    {
+      role: 'editMenu',
+    },
+    {
+      role: 'viewMenu',
+    },
+    {
+      role: 'windowMenu',
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click: async () => {
+            const { shell } = require('electron')
+            await shell.openExternal('https://electronjs.org')
+          },
+        },
+      ],
+    },
+  ]
+
+  const menu = Menu.buildFromTemplate(menuTemplate)
+  Menu.setApplicationMenu(menu)
+
+  // 监听窗口操作事件
   ipcMain.on(WINDOW_ACTION, handleWindowAction)
 
   // On OS X it's common to re-create a window in the app when the
