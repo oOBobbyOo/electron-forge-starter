@@ -25,6 +25,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
     // 无边框窗口
     frame: false,
     webPreferences: {
@@ -38,6 +39,12 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
   }
+
+  // 解决窗口显示时没有视觉闪烁
+  // @see https://www.electronjs.org/zh/docs/latest/api/browser-window
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
 
   // 仅在开发环境打开 DevTools，打包后的正式版本不打开
   if (!app.isPackaged) {
