@@ -1,4 +1,12 @@
-import { app, BrowserWindow, ipcMain, Menu, MenuItem, MenuItemConstructorOptions } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  MenuItem,
+  MenuItemConstructorOptions,
+  nativeImage,
+} from 'electron'
 import started from 'electron-squirrel-startup'
 import path from 'node:path'
 
@@ -9,6 +17,8 @@ import { handleWindowAction } from './utils/window'
 if (started) {
   app.quit()
 }
+
+const isMac = process.platform === 'darwin'
 
 const createWindow = () => {
   // Create the browser window.
@@ -48,6 +58,9 @@ app.whenReady().then(() => {
     click: (menuItem, window) => {
       window?.setAlwaysOnTop(menuItem.checked)
     },
+    icon: isMac
+      ? nativeImage.createMenuSymbol('pin')
+      : nativeImage.createFromPath(`${app.getAppPath()}/assets/images/pin.png`),
   }
 
   // 获取应用菜单, 并在窗口菜单中添加 "Always on Top" 选项
@@ -97,7 +110,7 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (!isMac) {
     app.quit()
   }
 })
