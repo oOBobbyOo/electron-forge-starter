@@ -6,6 +6,7 @@ import {
   MenuItem,
   MenuItemConstructorOptions,
   nativeImage,
+  Tray,
 } from 'electron'
 import started from 'electron-squirrel-startup'
 import path from 'node:path'
@@ -19,6 +20,7 @@ if (started) {
 }
 
 const isMac = process.platform === 'darwin'
+let tray: Tray
 
 const createWindow = () => {
   // Create the browser window.
@@ -100,6 +102,15 @@ app.whenReady().then(() => {
 
   const menu = Menu.buildFromTemplate([...appWindow, ...menuTemplate])
   Menu.setApplicationMenu(menu)
+
+  const logo = nativeImage.createFromPath(`${app.getAppPath()}/assets/images/logo.png`)
+  if (isMac) {
+    logo.setTemplateImage(true)
+  }
+
+  tray = new Tray(logo)
+  const contextMenu = Menu.buildFromTemplate([{ role: 'quit' }])
+  tray.setContextMenu(contextMenu)
 
   // 监听窗口操作事件
   ipcMain.on(WINDOW_ACTION, handleWindowAction)
